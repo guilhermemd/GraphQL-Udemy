@@ -4,4 +4,10 @@ mutation {
     firstName,
     age
   }
-}
+} --- retorn o que for add
+
+mutation {
+  deleteUser(id: "40") {
+    id
+  }
+} --- retorn NULL
