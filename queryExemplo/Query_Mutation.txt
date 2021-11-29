@@ -1,3 +1,4 @@
+--- POST ---
 mutation {
   addUser(firstName: "Ringo", age: 88) {
     id,
@@ -6,8 +7,25 @@ mutation {
   }
 } --- retorn o que for add
 
+--- DELETE ---
 mutation {
   deleteUser(id: "40") {
     id
   }
 } --- retorn NULL
+
+--- PUT --- esta não é a melhor opção pois atualiza somento os dados enviados. O restante recebe NULL como valor
+mutation {
+  overWriteUser(id: "40") {
+
+  }
+}
+
+--- PATH --- melhor opção par a fazer update/edit de um banco de dados
+mutation {
+  editUser(id: "41", firstName: "Maria") {
+    firstName
+    id
+    age
+  }
+}

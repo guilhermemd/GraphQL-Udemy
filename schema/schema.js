@@ -103,8 +103,26 @@ const mutation = new GraphQLObjectType({
       args: {
         id: { type: new GraphQLNonNull(GraphQLString)},
       },
+      //destructuring "args"
       resolve(_parentValue, args) {
         return axios.delete(`http://localhost:3000/users/${args.id}`)
+          .then((resp) => resp.data); 
+      }
+    },
+
+    editUser: {
+      type: UserType,
+      args: {
+        // somente "id" is requered assim podemos atualizar tofas ou uma info do data base
+        id: { type: new GraphQLNonNull(GraphQLString)},
+        firstName: { type: GraphQLString},
+        age: { type: GraphQLInt},
+        companyId: { type: GraphQLString}
+      },
+      // passo args como objeto inteiro ou poderia fazer o destructuring como no deleteUser
+      resolve(_parentValue, args) {
+        console.log(args)
+        return axios.patch(`http://localhost:3000/users/${args.id}`, args)
           .then((resp) => resp.data); 
       }
     }
