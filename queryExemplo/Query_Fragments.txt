@@ -1,0 +1,15 @@
+Query Fragments
+{
+  apple: company(id: "id") {
+    ..companyDetails
+  }
+  google: company(id: "2:) {
+    ...companyDetails
+  }
+}
+
+fragment comapnyDetails on Company {
+  id,
+  name,
+  description
+}
