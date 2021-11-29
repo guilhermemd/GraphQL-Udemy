@@ -47,6 +47,7 @@ const UserType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
+    //aqui é o argumento da query, "user" pode ser "xablau"!!
     user: {
       type: UserType,
       args: { id: { type: GraphQLString } },
@@ -56,6 +57,16 @@ const RootQuery = new GraphQLObjectType({
         return axios.get(`http://localhost:3000/users/${args.id}`)
           .then((resp) => resp.data);
           //colocar 'resp.data' pois o axios retorna um obj chamado data com as info requisitadas
+      }
+    },
+    //nome do argumento query é company
+    company: { 
+      type: CompanyType,
+      args: { id: { type: GraphQLString } },
+      resolve(_parentValue, args) {
+        // console.log(args);
+        return axios.get(`http://localhost:3000/companies/${args.id}`)
+          .then((resp) => resp.data);
       }
     }
   }
