@@ -8,7 +8,8 @@ const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLInt,
-  GraphQLSchema
+  GraphQLSchema,
+  GraphQLList
 } = graphql;
 
 // const  users = [
@@ -18,27 +19,35 @@ const {
 
 const CompanyType = new GraphQLObjectType({
   name: 'Company',
-  fields: {
+  // fields passou paa arrow function para que a função seja defina mas não executada, podendo pegar os valores de UserType
+  fields: () => ({
     id: { type: GraphQLString },
     name: { type: GraphQLString },
-    description: { type: GraphQLString}
-  }
+    description: { type: GraphQLString},
+    users: { 
+      type: new GraphQLList(UserType),
+      resolve(parentValue, _args) {
+        return axios.get(`http://localhost:3000/companies/${parentValue.id}/users`)
+          .then((resp) => resp.data);
+      }
+    }
+  })
 });
 
 const UserType = new GraphQLObjectType({
   name: 'User',
-  fields: {
+  fields: () =>  ({
     id: { type: GraphQLString},
     firstName: { type: GraphQLString},
     age: { type: GraphQLInt},
     company: { 
       type: CompanyType,
       resolve(parentValue, _args) {
-        return axios.get(`http://localhost:3000/companies/${parentValue.companyId}`)
+        return axios.get(`http://localhost:3000/companies/${parentValue.users.id}`)
           .then((resp) => resp.data);
       }
     }
-  }
+  })
 });
 
 // O RootQuery faz com que o GraphQL pule/vá para um especifico dado
@@ -64,7 +73,7 @@ const RootQuery = new GraphQLObjectType({
       type: CompanyType,
       args: { id: { type: GraphQLString } },
       resolve(_parentValue, args) {
-        // console.log(args);
+        // console.log(args) => retorna { id: "1"};
         return axios.get(`http://localhost:3000/companies/${args.id}`)
           .then((resp) => resp.data);
       }
